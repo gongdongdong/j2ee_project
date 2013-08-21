@@ -1,0 +1,53 @@
+.idiv1 {
+	background-color: #CCF;
+	height: 180px;
+	width: 300px;
+	border: thin solid #9F9;
+	padding-right: 40px;
+	margin-top: 230px;
+	margin-right: auto;
+	margin-bottom: auto;
+	margin-left: auto;
+}
+.mdiv1 {
+	text-align: center;
+	height: 100px;
+	padding-top: 20px;
+	background-color: #CCF;
+}
+.mdiv2 {
+	text-align: center;
+	margin-right: 100px;
+	margin-left: 100px;
+	margin-top: 10px;
+	border: thin solid #CF6;
+}
+.mdiv2:hover {
+	background-color:#CF9;
+}
+.mdiv3 {
+	text-align: center;
+	margin-top: 10px;
+	margin-right: 100px;
+	margin-left: 100px;
+	border: thin solid #CF6;
+}
+.mdiv3:hover {
+	background-color:#CF9;
+}
+h3 {
+	background-color: #C96;
+	text-align: center;
+}
+
+.p1 {
+	text-align: right;
+}
+.bj {
+	background-color: #69F;
+}
+.mdiv4 {
+	background-color: #CCF;
+	margin-top: 10px;
+	text-align: center;
+}

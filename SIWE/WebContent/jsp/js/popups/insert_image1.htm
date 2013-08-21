@@ -1,0 +1,358 @@
+<html>
+<head>
+<title>插入图片</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<style type="text/css">
+<!--
+body {
+	font-family: Verdana, "宋体";
+	font-size: 12px;
+	margin: 0px;
+	background-color:buttonface;
+	border: none;
+}
+table {
+	font-family: Verdana, "宋体";
+	font-size: 12px;
+}
+.f {
+	font-family: Verdana, "宋体";
+	font-size: 12px;
+	width: 100%;
+}
+input.button {
+	font-family: Verdana, "宋体";
+	font-size: 12px;
+	padding-left: 12px;
+	padding-right: 12px;
+}
+.lCell {
+	padding-left: 6px;
+}
+.headBar {
+	height: 70px;
+	background-color: #EFEFEF;
+	border-bottom: 2px groove;
+	padding-left: 21px;
+	padding-top: 3px;
+	margin-bottom: 5px;
+	line-height: 20px;
+	background-image: url(../images/picIco.gif);
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+-->
+</style>
+<script language="javaScript">
+<!--
+function onFileChange(vSender) {
+  editPath.value = vSender.value;
+  btnOK.disabled = true;
+  picView.removeAttribute("width", 0);
+  picView.removeAttribute("height", 0);
+  picView.src = "file://" + vSender.value;
+}
+
+function doPicLoad() {
+  btnOK.disabled = false;
+  editWidth.value = picView.width;
+  editHeight.value = picView.height;
+  picView.width = picView.width;
+  picView.height = picView.height;
+}
+
+function setPropertyA(property, value) {
+  if("" == value)
+    picView.removeAttribute(property, 0); else
+    picView.setAttribute(property, value);
+}
+
+function setProperty(vSender, property) {
+  if("" == vSender.value)
+    picView.removeAttribute(property, 0);
+  else {
+    var v = parseInt(vSender.value);
+    if(!isNaN(v))
+      picView.setAttribute(property, v);
+    vSender.value = picView.getAttribute(property);
+  }
+}
+
+function dispatch(vSender) {
+  switch(vSender.name) {
+  case "txtAltText":
+    setPropertyA("alt", vSender.value);
+    break;
+  case "editWidth":
+    setProperty(vSender, "width");
+    break;
+  case "editHeight":
+    setProperty(vSender, "height");
+    break;
+  case "editHSpace":
+    setProperty(vSender, "hspace");
+    break;
+  case "editVSpace":
+    setProperty(vSender, "vspace");
+    break;
+  case "editBorder":
+    setProperty(vSender, "border");
+  }
+}
+
+function onEditKeyPress(vSender) {
+  if(13 == event.keyCode) {
+    dispatch(vSender);
+    vSender.select();
+  }
+}
+
+var winHandle = null;
+
+function windowView() {
+//  if(null == winHandle)
+/*
+    winHandle = window.open("about:blank", "editImg", "height=280, width=360, resizable=yes, menubar=no, status=no, toolbar=no");
+    alert(winHandle.document.body);
+    winHandle.document.clear();
+    winHandle.document.write(previewArea.innerHTML);
+*/
+//  winHandle.document.body.innerHTML = previewArea.innerHTML;
+}
+
+function onBtnOKClick() {
+  btnOK.disabled = true;
+  btnCancel.disabled = true;
+  tip.style.visibility = "visible";
+  document.body.style.cursor = "wait";
+  window.frames[0].document.forms[0].action.value="upload";
+  window.frames[0].document.forms[0].submit();
+}
+
+function _CloseOnEsc() {
+  if (event.keyCode == 27) { window.close(); return; }
+}
+
+function _getTextRange(elm) {
+  var r = elm.parentTextEdit.createTextRange();
+  r.moveToElementText(elm);
+  return r;
+}
+
+window.onerror = HandleError
+
+function HandleError(message, url, line) {
+  var str = "An error has occurred in this dialog." + "\n\n"
+  + "Error: " + line + "\n" + message;
+  alert(str);
+  window.close();
+  return true;
+}
+
+function Init() {
+  var elmSelectedImage;
+  var htmlSelectionControl = "Control";
+  var globalDoc = window.dialogArguments;
+  var grngMaster = globalDoc.selection.createRange();
+
+  // event handlers
+  document.body.onkeypress = _CloseOnEsc;
+  //btnOK.onclick = new Function("btnOKClick()");
+
+  txtFileName.fImageLoaded = false;
+  txtFileName.intImageWidth = 0;
+  txtFileName.intImageHeight = 0;
+
+  if (globalDoc.selection.type == htmlSelectionControl) {
+    if (grngMaster.length == 1) {
+      elmSelectedImage = grngMaster.item(0);
+      if (elmSelectedImage.tagName == "IMG") {
+        txtFileName.fImageLoaded = true;
+        if (elmSelectedImage.src) {
+          txtFileName.value          = elmSelectedImage.src.replace(/^[^*]*(\*\*\*)/, "$1");  // fix placeholder src values that editor converted to abs paths
+          txtFileName.intImageHeight = elmSelectedImage.height;
+          txtFileName.intImageWidth  = elmSelectedImage.width;
+          txtVertical.value          = elmSelectedImage.vspace;
+          txtHorizontal.value        = elmSelectedImage.hspace;
+          txtBorder.value            = elmSelectedImage.border;
+          txtAltText.value           = elmSelectedImage.alt;
+          selAlignment.value         = elmSelectedImage.align;
+        }
+      }
+    }
+  }
+  txtFileName.value = txtFileName.value || "http://";
+//  txtFileName.focus();
+}
+
+function _isValidNumber(txtBox) {
+  var val = parseInt(txtBox);
+  if (isNaN(val) || val < 0 || val > 999) { return false; }
+  return true;
+}
+
+function btnOKClick() {
+
+  var elmImage;
+  var intAlignment;
+  var htmlSelectionControl = "Control";
+  var globalDoc = window.dialogArguments;
+  var grngMaster = globalDoc.selection.createRange();
+
+  // error checking
+
+  if (!txtFileName.value || txtFileName.value == "http://") {
+    alert("Image URL must be specified.");
+//    txtFileName.focus();
+    return;
+  }
+  if (txtHorizontal.value && !_isValidNumber(txtHorizontal.value)) {
+    alert("Horizontal spacing must be a number between 0 and 999.");
+    txtHorizontal.focus();
+    return;
+  }
+  if (txtBorder.value && !_isValidNumber(txtBorder.value)) {
+    alert("Border thickness must be a number between 0 and 999.");
+    txtBorder.focus();
+    return;
+  }
+  if (txtVertical.value && !_isValidNumber(txtVertical.value)) {
+    alert("Vertical spacing must be a number between 0 and 999.");
+    txtVertical.focus();
+    return;
+  }
+
+  // delete selected content and replace with image
+  if (globalDoc.selection.type == htmlSelectionControl && !txtFileName.fImageLoaded) {
+    grngMaster.execCommand('Delete');
+    grngMaster = globalDoc.selection.createRange();
+  }
+
+  idstr = "\" id=\"556e697175657e537472696e67";     // new image creation ID
+  if (!txtFileName.fImageLoaded) {
+    grngMaster.execCommand("InsertImage", false, idstr);
+    elmImage = globalDoc.all['556e697175657e537472696e67'];
+    elmImage.removeAttribute("id");
+    elmImage.removeAttribute("src");
+    grngMaster.moveStart("character", -1);
+  } else {
+    elmImage = grngMaster.item(0);
+    if (elmImage.src != txtFileName.value) {
+      grngMaster.execCommand('Delete');
+      grngMaster = globalDoc.selection.createRange();
+      grngMaster.execCommand("InsertImage", false, idstr);
+      elmImage = globalDoc.all['556e697175657e537472696e67'];
+      elmImage.removeAttribute("id");
+      elmImage.removeAttribute("src");
+      grngMaster.moveStart("character", -1);
+      txtFileName.fImageLoaded = false;
+    }
+    grngMaster = _getTextRange(elmImage);
+  }
+
+  if (txtFileName.fImageLoaded) {
+    elmImage.style.width = txtFileName.intImageWidth;
+    elmImage.style.height = txtFileName.intImageHeight;
+  }
+
+  if (txtFileName.value.length > 2040) {
+    txtFileName.value = txtFileName.value.substring(0,2040);
+  }
+
+  elmImage.src = txtFileName.value;
+
+  if (txtHorizontal.value != "") { elmImage.hspace = parseInt(txtHorizontal.value); }
+  else                           { elmImage.hspace = 0; }
+
+  if (txtVertical.value != "") { elmImage.vspace = parseInt(txtVertical.value); }
+  else                         { elmImage.vspace = 0; }
+
+  elmImage.alt = txtAltText.value;
+
+  if (txtBorder.value != "") { elmImage.border = parseInt(txtBorder.value); }
+  else                       { elmImage.border = 0; }
+  elmImage.align = selAlignment.value;
+  elmImage.width = editWidth.value;
+  elmImage.height = editHeight.value;
+  grngMaster.collapse(false);
+  grngMaster.select();
+  window.close();
+}
+
+-->
+</script>
+</head>
+
+<body scroll="no" onload="Init()">
+<div class="headBar">
+<b>插入图片</b><br />
+&nbsp;&nbsp;&nbsp;插入图片到当前正在编辑的文档中。<br />
+&nbsp;&nbsp;&nbsp;请选择图片，并设置好它的属性，然后点击确定按钮。
+</div>
+<div style="padding-left: 21px; padding-right: 21px;">
+<table width="620" cellspacing="0">
+  <tr>
+    <td valign="top" rowspan="2"><div id="previewArea" style="width: 160px; height: 230px; overflow: auto; border: 1px solid #000000; cursor: hand; text-align: center; background-color: #FFFFFF; padding: 3px;" onclick="windowView();">预<img id="picView" onload="doPicLoad();" />览</div></td>
+    <td valign="top"><table width="100%" cellspacing="0" >
+      <col width="60"/>
+      <col width="80"/>
+      <col width="60"/>
+      <col width="80"/>
+      <col width="60"/>
+      <col width="80"/>
+      <tr>
+        <td height="32" class="lCell">路径:</td>
+        <td colspan="4"><input id="editPath" name="editPath" type="text" class="f" readonly></td>
+        <td><input name="btnBrowse" type="button" class="button" value="浏览…" onclick="window.frames[0].document.forms[0].filename.click();"></td>
+      </tr>
+      <tr>
+        <td height="32" class="lCell">替换文字:</td>
+        <td colspan="5"><input id="txtAltText" name="txtAltText" type="text" class="f" onkeypress="onEditKeyPress(this);" onblur="dispatch(this);"></td>
+      </tr>
+      <tr>
+        <td height="32" class="lCell">宽:</td>
+        <td><input id="editWidth" name="editWidth" type="text" class="f" onkeypress="onEditKeyPress(this);" onblur="dispatch(this);"></td>
+        <td class="lCell">水平边距:</td>
+        <td><input id=txtHorizontal name="editHSpace" type="text" class="f" onkeypress="onEditKeyPress(this);" onblur="dispatch(this);"></td>
+        <td class="lCell">对齐方式:</td>
+        <td><select name="selectAlign" id="selAlignment" class="f" onchange="setPropertyA('align', this.options[this.selectedIndex].value);">
+            <option value="" selected>默认</option>
+            <option value="baseline">基线</option>
+            <option value="top">顶端对齐</option>
+            <option value="middle">相对垂直居中</option>
+            <option value="bottom">相对底边对齐</option>
+            <option value="texttop">文本上文</option>
+            <option value="absmiddle">绝对垂直居中</option>
+            <option value="absbottom">绝对底边对齐</option>
+            <option value="left">左对齐</option>
+            <option value="right">右对齐</option>
+        </select></td>
+      </tr>
+      <tr>
+        <td height="32" class="lCell">高:</td>
+        <td><input id="editHeight" name="editHeight" type="text" class="f" onkeypress="onEditKeyPress(this);" onblur="dispatch(this);"></td>
+        <td class="lCell">垂直边距:</td>
+        <td><input id=txtVertical name="editVSpace" type="text" class="f" onkeypress="onEditKeyPress(this);" onblur="dispatch(this);"></td>
+        <td class="lCell">边框:</td>
+        <td><input id=txtBorder name="editBorder" type="text" class="f" onkeypress="onEditKeyPress(this);" onblur="dispatch(this);"></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr><td>
+    <div id="tip" style="visibility: hidden; text-align: left; background-color: #FFFFE0; border: 1px solid #FFE000; padding-left: 21px; padding-top: 1px; line-height: 16px;">
+      图片上传中，请稍候…
+    </div>
+  </td></tr>
+</table>
+</div>
+<br /><br /><br />
+<div style="behavior: url(divLine.htc)" caption="宁波建龙"></div>
+<div style=" padding-right: 21px; text-align: right">
+  <input id="btnOK" name="btnOK" type="button" class="button" value="确定" disabled onclick="onBtnOKClick();">
+  <input id="btnCancel" name="btnCancel" type="button" class="button" value="取消" onclick="window.close()"><!--window.close();-->
+</div>
+<INPUT ID=txtFileName type="hidden" style="left: 8.54em; top: 1.0647em; width: 21.5em;height: 2.1294em; " tabIndex=10 onfocus="select()">
+<br /><br /><br /><br /><br />
+<iframe src="insertImg1.jsp?flag=true"></iframe>
+</body>
+</html>

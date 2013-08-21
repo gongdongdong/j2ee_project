@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+	<bean id="loginAction" class="com.SIWE.action.LoginAction">
+
+		<property name="loginService">
+			<ref local="loginService" />
+		</property>
+
+		<property name="newsReadService">
+			<ref local="newsReadService" />
+		</property>
+	</bean>
+	<bean id="newsReleaseAction" class="com.SIWE.action.NewsReleaseAction">
+		<property name="newsReleaseService">
+			<ref local="newsReleaseService" />
+		</property>
+
+	</bean>
+	<bean id="registAction" class="com.SIWE.action.RegistAction">
+		<property name="registService">
+			<ref local="registService" />
+		</property>
+
+	</bean>
+	
+		<bean id="newsReadAction" class="com.SIWE.action.NewsReadAction">
+		<property name="newsReadService">
+			<ref local="newsReadService" />
+		</property>
+
+	</bean>
+
+
+
+
+
+	<bean id="loginService" class="com.SIWE.service.impl.LoginServiceImpl">
+
+		<property name="loginDAO">
+			<ref local="loginDAO" />
+		</property>
+	</bean>
+
+	<bean id="newsReadService" class="com.SIWE.service.impl.NewsReadServiceImpl">
+
+		<property name="newsReadDAO">
+			<ref local="newsReadDAO" />
+		</property>
+	</bean>
+
+	<bean id="newsReleaseService" class="com.SIWE.service.impl.NewsReleaseServiceImpl">
+
+		<property name="newsReleaseDAO">
+			<ref local="newsReleaseDAO" />
+		</property>
+	</bean>
+
+
+	<bean id="registService" class="com.SIWE.service.impl.RegistServiceImpl">
+
+		<property name="registDAO">
+			<ref local="registDAO" />
+		</property>
+	</bean>
+
+
+
+
+
+
+
+	<bean id="loginDAO" class="com.SIWE.dao.impl.LoginDAOImpl">
+
+		<property name="entityManagerFactory">
+			<ref local="entityManagerFactory" />
+		</property>
+	</bean>
+
+	<bean id="newsReadDAO" class="com.SIWE.dao.impl.NewsReadDAOImpl">
+
+		<property name="entityManagerFactory">
+			<ref local="entityManagerFactory" />
+		</property>
+	</bean>
+
+
+	<bean id="registDAO" class="com.SIWE.dao.impl.RegistDAOImpl">
+
+		<property name="entityManagerFactory">
+			<ref local="entityManagerFactory" />
+		</property>
+	</bean>
+
+
+	<bean id="newsReleaseDAO" class="com.SIWE.dao.impl.NewsReleaseDAOImpl">
+
+		<property name="entityManagerFactory">
+			<ref local="entityManagerFactory" />
+		</property>
+	</bean>
+
+
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="entityManager" />
+		<property name="jpaProperties">
+			<props></props>
+		</property>
+	</bean>
+
+</beans>

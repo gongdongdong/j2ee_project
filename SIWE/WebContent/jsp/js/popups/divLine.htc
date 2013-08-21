@@ -1,0 +1,35 @@
+<PUBLIC:COMPONENT NAME="webPart" URN="myWebComponent">
+    <PUBLIC:PROPERTY NAME="caption" PUT="putCaption" />
+
+    <PUBLIC:ATTACH EVENT="oncontentready" ONEVENT="initObj()" />
+
+   <SCRIPT LANGUAGE="JScript">
+
+    var elementCaption = document.createElement("SPAN");
+    elementCaption.style.paddingLeft = "6px";
+    elementCaption.disabled = true;
+    element.appendChild(elementCaption);
+
+    var elementLine = document.createElement("SPAN");
+    elementLine.style.borderBottom = "2px groove";
+    element.appendChild(elementLine);
+
+    function adjust() {
+      var w = element.offsetWidth - elementCaption.offsetWidth;
+      elementLine.style.lineHeight = "36%";
+      elementLine.style.width = w + "px";
+    }
+
+    function putCaption(vCaption) {
+      elementCaption.innerText = vCaption;
+      adjust();
+    }
+
+    function initObj() {
+      element.style.marginTop = "5px";
+      element.style.marginBottom = "5px";
+    }
+
+  </SCRIPT>
+
+</PUBLIC:COMPONENT>
